@@ -14,6 +14,58 @@ $(function () {
       '<path d="M12.01 21.49L23.64 7c-.45-.34-4.93-4-11.64-4C5.28 3 .81 6.66.36 7l11.63 14.49.01.01.01-.01z" fill-opacity=".3"/>',
     ];
 
+    self.strengthLevels = [
+      {
+        min: -120,
+        max: -91,
+        name: 'None',
+        description: 'Pretty much considered undetectable, the network might as well not exist.',
+        color: '#3d0001',
+      }, {
+        min: -90,
+        max: -81,
+        name: 'Unusable',
+        description: 'It\'s only just showing up, but you shouldn\'t expect anything to work.',
+        color: '#ed1f25',
+      },  {
+        min: -80,
+        max: -71,
+        name: 'Unreliable',
+        description: 'Small amounts of data will get through but expect a lot of issues.',
+        color: '#f26723',
+      },  {
+        min: -70,
+        max: -68,
+        name: 'Okay',
+        description: 'It should be working, but it\'s not particular good and may have issues.',
+        color: '#f57e21',
+      },  {
+        min: -67,
+        max: -61,
+        name: 'Good',
+        description: 'Not too bad at all but HD video streaming might struggle a bit.',
+        color: '#fba919',
+      },  {
+        min: -60,
+        max: -51,
+        name: 'Very good',
+        description: 'This should be doing the job very nicely for all uses.',
+        color: '#e3d114',
+      },  {
+        min: -50,
+        max: -31,
+        name: 'Excellent',
+        description: 'Really quite excellent signal strength.',
+        color: '#8bc640',
+      }, {
+        min: -30,
+        max: -30,
+        name: 'Perfection',
+        description: 'This is considered the theoretical maximum of WiFi strength, really quite unlikely.',
+        color: '#17aa4a',
+      }, 
+    ]
+
     self.IconSVG = ko.observable(self._svgPrefix + self._iconSVGs[0]);
     self.wifiData = ko.observableArray([]);
     self.interfaces = ko.observableArray([]);
