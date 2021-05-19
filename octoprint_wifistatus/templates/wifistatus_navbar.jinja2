@@ -3,6 +3,17 @@
   <b class="caret"></b>
 </a>
 <ul class="dropdown-menu">
+  <li id="navbar_plugin_wifistatus-bar">
+    <!--ko foreach: strengthLevels -->
+      <div
+        class="block"
+        data-bind="style: {
+          backgroundColor: color,
+          width: rangePercent + '%'
+        }"></div>
+    <!-- /ko -->
+    <div class="indicator-arrow" data-bind="style: { left: strengthPercentage() + '%'}"></div>
+  </li>
   <!-- ko foreach: wifiData -->
     <li><a href="javascript:void(0)"><span data-bind="text: text"></span></a></li>
   <!-- /ko -->

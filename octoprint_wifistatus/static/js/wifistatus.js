@@ -14,61 +14,82 @@ $(function () {
       '<path d="M12.01 21.49L23.64 7c-.45-.34-4.93-4-11.64-4C5.28 3 .81 6.66.36 7l11.63 14.49.01.01.01-.01z" fill-opacity=".3"/>',
     ];
 
-    self.strengthLevels = [
-      {
-        min: -120,
-        max: -91,
-        name: 'None',
-        description: 'Pretty much considered undetectable, the network might as well not exist.',
-        color: '#3d0001',
-      }, {
-        min: -90,
-        max: -81,
-        name: 'Unusable',
-        description: 'It\'s only just showing up, but you shouldn\'t expect anything to work.',
-        color: '#ed1f25',
-      },  {
-        min: -80,
-        max: -71,
-        name: 'Unreliable',
-        description: 'Small amounts of data will get through but expect a lot of issues.',
-        color: '#f26723',
-      },  {
-        min: -70,
-        max: -68,
-        name: 'Okay',
-        description: 'It should be working, but it\'s not particular good and may have issues.',
-        color: '#f57e21',
-      },  {
-        min: -67,
-        max: -61,
-        name: 'Good',
-        description: 'Not too bad at all but HD video streaming might struggle a bit.',
-        color: '#fba919',
-      },  {
-        min: -60,
-        max: -51,
-        name: 'Very good',
-        description: 'This should be doing the job very nicely for all uses.',
-        color: '#e3d114',
-      },  {
-        min: -50,
-        max: -31,
-        name: 'Excellent',
-        description: 'Really quite excellent signal strength.',
-        color: '#8bc640',
-      }, {
-        min: -30,
-        max: -30,
-        name: 'Perfection',
-        description: 'This is considered the theoretical maximum of WiFi strength, really quite unlikely.',
-        color: '#17aa4a',
-      }, 
-    ]
+    const strengthLevelsBasics = [{
+      minDbm: -120,
+      maxDbm: -90,
+      name: 'None',
+      description: 'Pretty much considered undetectable, the network might as well not exist.',
+      color: '#640000',
+    }, {
+      minDbm: -90,
+      maxDbm: -80,
+      name: 'Unusable',
+      description: 'It\'s only just showing up, but you shouldn\'t expect anything to work.',
+      color: '#ed1f25',
+    },  {
+      minDbm: -80,
+      maxDbm: -70,
+      name: 'Unreliable',
+      description: 'Small amounts of data will get through but expect a lot of issues.',
+      color: '#f26723',
+    },  {
+      minDbm: -70,
+      maxDbm: -67,
+      name: 'Okay',
+      description: 'It should be working, but it\'s not particular good and may have issues.',
+      color: '#f57e21',
+    },  {
+      minDbm: -67,
+      maxDbm: -60,
+      name: 'Good',
+      description: 'Not too bad at all but HD video streaming might struggle a bit.',
+      color: '#fba919',
+    },  {
+      minDbm: -60,
+      maxDbm: -50,
+      name: 'Very good',
+      description: 'This should be doing the job very nicely for all uses.',
+      color: '#e3d114',
+    },  {
+      minDbm: -50,
+      maxDbm: -30,
+      name: 'Excellent',
+      description: 'Really quite excellent signal strength.',
+      color: '#8bc640',
+    }, {
+      minDbm: -30,
+      maxDbm: -30,
+      name: 'Perfection',
+      description: 'This is considered the theoretical maximum of WiFi strength, really quite unlikely.',
+      color: '#17aa4a',
+    }];
+
+    const getStrengthPercentage = function(strength, round = false) {
+      const strengthMin = _.first(strengthLevelsBasics).minDbm;
+      const strengthMax = _.last(strengthLevelsBasics).maxDbm;
+      const range = strengthMax - strengthMin;
+      let result = (strength - strengthMin) / range * 100;
+      return round ? Math.round(result) : result;
+    }
+
+    self.strengthLevels = strengthLevelsBasics.map(function(strength) {
+      const rangeDbm = strength.maxDbm - strength.minDbm;
+      const minPercent = getStrengthPercentage(strength.minDbm);
+      const maxPercent = getStrengthPercentage(strength.maxDbm);
+      const rangePercent = maxPercent - minPercent;
+      return {
+        ...strength,
+        rangeDbm,
+        minPercent,
+        maxPercent,
+        rangePercent,
+      };
+    });
 
     self.IconSVG = ko.observable(self._svgPrefix + self._iconSVGs[0]);
     self.wifiData = ko.observableArray([]);
     self.interfaces = ko.observableArray([]);
+    self.strengthPercentage = ko.observable(0);
 
     self.onSettingsShown = function() {
       OctoPrint.simpleApiGet("wifistatus")
@@ -89,13 +110,16 @@ $(function () {
       if (!data.interface) {
         svg += self._iconSVGs[0];
         wfData = [{ text: "No connection" }];
+        self.strengthPercentage(0);
       } else if (!data.essid) {
         svg += self._iconSVGs[0];
         wfData = [
           { text: "Interface: " + data.interface },
           { text: "No connection" },
         ];
+        self.strengthPercentage(0);
       } else {
+        self.strengthPercentage(getStrengthPercentage(data.signal, true));
         quality = Math.round((data.qual / data.qual_max) * 100);
         if (quality > 80) svg += self._iconSVGs[1];
         else if (quality > 60) svg += self._iconSVGs[2];
