@@ -141,7 +141,7 @@ $(function () {
               "%)",
           },
           { text: "Bitrate: " + data.bitrate },
-          { text: "Signal: " + data.signal + "dBm" },
+          { text: "Signal: " + data.signal + "dBm (" + self.strengthPercentage() + "%)" },
         ];
         if (data.noise != 0)
           wfData.push({ text: "Noise: " + data.noise + "dBm" });
