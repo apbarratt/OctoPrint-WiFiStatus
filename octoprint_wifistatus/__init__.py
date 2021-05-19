@@ -51,7 +51,7 @@ class WiFiStatusPlugin(
     def get_assets(self):
         return {
             "js": ["js/wifistatus.js"],
-            "css": ["css/wifistatus.css"],
+            "less": ["less/wifistatus.less"],
         }
 
     def get_template_configs(self):
