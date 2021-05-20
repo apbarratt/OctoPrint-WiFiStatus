@@ -91,6 +91,10 @@ $(function () {
     self.interfaces = ko.observableArray([]);
     self.strengthPercentage = ko.observable(0);
 
+    self.openSettings = function() {
+      self.settingsViewModel.show('#settings_plugin_wifistatus');
+    };
+
     self.onSettingsShown = function() {
       OctoPrint.simpleApiGet("wifistatus")
         .done(function(response) {
