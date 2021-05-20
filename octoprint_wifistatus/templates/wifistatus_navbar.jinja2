@@ -15,13 +15,14 @@
     <div class="indicator-arrow" data-bind="style: { left: strengthPercentage() + '%'}"></div>
   </li>
   <!-- ko foreach: wifiData -->
-    <li data-bind="if: visible">
-      <a data-bind="text: `${name}: ${value}`"></a>
-    </li>
+    <!-- ko if: visible -->
+      <li class="dropdown-data" data-bind="text: `${name}: ${value}`"></li>
+    <!-- /ko -->
   <!-- /ko -->
+  <li class="divider"></li>
   <li>
     <a data-bind="click: openSettings">
-      Details
+      More information
     </a>
   </li>
 </ul>

@@ -87,7 +87,11 @@ $(function () {
     });
 
     self.IconSVG = ko.observable(self._svgPrefix + self._iconSVGs[0]);
-    self.wifiData = ko.observableArray([]);
+    self.wifiData = ko.observableArray([{
+      name: 'Status',
+      value: 'loading...',
+      visible: true,
+    }]);
     self.interfaces = ko.observableArray([]);
     self.strengthPercentage = ko.observable(0);
 
@@ -117,6 +121,7 @@ $(function () {
         wfData.push({
           name: 'Connection',
           value: 'None',
+          visible: true,
         });
         self.strengthPercentage(0);
       } else if (!data.essid) {
@@ -124,9 +129,11 @@ $(function () {
         wfData.push({
           name: 'Interface',
           value: data.interface,
+          visible: true,
         }, {
           name: 'Connection',
           value: 'None',
+          visible: true,
         });
         self.strengthPercentage(0);
       } else {
@@ -166,11 +173,11 @@ $(function () {
           }, {
             name: 'Frequency',
             value: data.frequency || '',
-            visible: !!data.frequency,
+            visible: true,
           }, {
             name: 'BSSID',
             value: data.bssid || '',
-            visible: !!data.bssid,
+            visible: true,
           }
         );
 
