@@ -109,18 +109,25 @@ $(function () {
 
       svg = self._svgPrefix;
 
-      var wfData;
+      const wfData = [];
+
 
       if (!data.interface) {
         svg += self._iconSVGs[0];
-        wfData = [{ text: "No connection" }];
+        wfData.push({
+          name: 'Connection',
+          value: 'None',
+        });
         self.strengthPercentage(0);
       } else if (!data.essid) {
         svg += self._iconSVGs[0];
-        wfData = [
-          { text: "Interface: " + data.interface },
-          { text: "No connection" },
-        ];
+        wfData.push({
+          name: 'Interface',
+          value: data.interface,
+        }, {
+          name: 'Connection',
+          value: 'None',
+        });
         self.strengthPercentage(0);
       } else {
         self.strengthPercentage(getStrengthPercentage(data.signal, true));
@@ -131,49 +138,64 @@ $(function () {
         else if (quality > 20) svg += self._iconSVGs[4];
         else svg += self._iconSVGs[5];
 
-        wfData = [
-          { text: "Interface: " + data.interface },
-          { text: "ESSID: " + data.essid },
+        wfData.push(
           {
-            text:
-              "Quality: " +
-              data.qual +
-              "/" +
-              data.qual_max +
-              " (" +
-              quality +
-              "%)",
-          },
-          { text: "Bitrate: " + data.bitrate },
-          { text: "Signal: " + data.signal + "dBm (" + self.strengthPercentage() + "%)" },
-        ];
-        if (data.noise != 0)
-          wfData.push({ text: "Noise: " + data.noise + "dBm" });
-        if (data.frequency)
-          wfData.push({ text: "Frequency: " + data.frequency });
-        if (data.bssid) wfData.push({ text: "BSSID: " + data.bssid });
+            name: 'Interface',
+            value: data.interface,
+            visible: true,
+          }, { 
+            name: 'SSID',
+            value: data.essid,
+            visible: true,
+          }, {
+            name: 'Quality',
+            value: `${data.qual}/${data.qual_max} (${quality}%)`,
+            visible: true,
+          }, {
+            name: 'Bitrate',
+            value: data.bitrate,
+            visible: true,
+          }, {
+            name: 'Signal',
+            value: `${data.signal}dBm (${self.strengthPercentage()}%)`,
+            visible: true,
+          }, {
+            name: 'Noise',
+            value: `${data.noise}dBm`,
+            visible: data.noise !== 0,
+          }, {
+            name: 'Frequency',
+            value: data.frequency || '',
+            visible: !!data.frequency,
+          }, {
+            name: 'BSSID',
+            value: data.bssid || '',
+            visible: !!data.bssid,
+          }
+        );
+
         if (data.ipv4addrs) {
-          var i;
-          for (i = 0; i < data.ipv4addrs.length; i++)
+          for (const i = 0; i < data.ipv4addrs.length; i++)
             wfData.push({
-              text:
-                (i == 0 ? "IPV4: " : "&nbsp;".repeat(10)) + data.ipv4addrs[i],
+              name: 'IPV4',
+              value: data.ipv4addrs[i],
+              visible: true,
             });
         }
         if (data.ipv6addrs) {
-          var i;
-          for (i = 0; i < data.ipv6addrs.length; i++)
+          for (const i = 0; i < data.ipv6addrs.length; i++)
             wfData.push({
-              text:
-                (i == 0 ? "IPV6: " : "&nbsp;".repeat(10)) + data.ipv6addrs[i],
+              name: 'IPV6',
+              value: (i == 0 ? "IPV6: " : "&nbsp;".repeat(10)) + data.ipv6addrs[i],
+              visible: true,
             });
         }
       }
-      self.IconSVG(svg);
       self.wifiData(wfData);
-      var navbarHeight = document.getElementById("navbar_systemmenu")
+      self.IconSVG(svg);
+      const navbarHeight = document.getElementById("navbar_systemmenu")
         .offsetHeight;
-      var iconHeight = document
+      const iconHeight = document
         .getElementById("navbar_plugin_wifistatus_icon")
         .getClientRects()[0].height;
       var link = document.getElementById("navbar_plugin_wifistatus_link");

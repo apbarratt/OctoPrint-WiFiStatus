@@ -15,7 +15,9 @@
     <div class="indicator-arrow" data-bind="style: { left: strengthPercentage() + '%'}"></div>
   </li>
   <!-- ko foreach: wifiData -->
-    <li><a data-bind="text: text"></a></li>
+    <li data-bind="if: visible">
+      <a data-bind="text: `${name}: ${value}`"></a>
+    </li>
   <!-- /ko -->
   <li>
     <a data-bind="click: openSettings">
