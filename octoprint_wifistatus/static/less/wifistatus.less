@@ -8,34 +8,35 @@
     padding-bottom: 0;
     height: auto;
   }
-  &-bar {
-    position: relative;
-    display: flex;
-    margin: 0 5px 3px;
-    border-radius: 6px;
-    overflow: hidden;
-    border: 1px solid #999;
-    .block {
-      height: 12px;
-      width: 5%;
-    }
-    .indicator-arrow {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 0;
-      height: 0;
-      border-bottom: 8px solid #fff;
-      border-left: 6px solid transparent;
-      border-right: 6px solid transparent;
-      margin-left: -6px;
-      transition: left 1s;
-    }
-  }
   .dropdown-data {
     padding: 0 20px;
     white-space: nowrap;
     color: #777;
     font-style: italic;
+  }
+}
+
+.wifistatus-bar {
+  position: relative;
+  display: flex;
+  margin: 0 5px 3px;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid #999;
+  .block {
+    height: 12px;
+    width: 5%;
+  }
+  .indicator-arrow {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 0;
+    border-bottom: 8px solid #fff;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    margin-left: -6px;
+    transition: left 1s;
   }
 }
